@@ -1,0 +1,7 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+  "recommendations": [
+    "luisfelipe.angular-extension-pack",
+    "luisfelipe.ts-extension-pack",
+  ]
+}

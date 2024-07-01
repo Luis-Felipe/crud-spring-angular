@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: courses
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    networks:
+      - backend-network
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - backend-network
+
+  backend:
+    container_name: crud-spring
+    build:
+      context: ./crud-spring
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/courses
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+      SPRING_REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend-network
+
+  frontend:
+    container_name: crud-angular
+    build:
+      context: ./crud-angular
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
